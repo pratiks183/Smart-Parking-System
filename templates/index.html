@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Parking Dashboard</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Background Video */
+    .bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    .overlay {
+      background-color: rgba(255, 255, 255, 0.85);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 40px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .description {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      font-size: 18px;
+      color: #444;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .summary {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .start-btn {
+      padding: 12px 28px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .start-btn:hover {
+      background-color: #2c80b4;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .slot {
+      width: 200px;
+      height: 120px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: transform 0.2s ease;
+    }
+
+    .slot:hover {
+      transform: translateY(-5px);
+    }
+
+    .empty {
+      background: #43a047;
+    }
+
+    .occupied {
+      background: #e53935;
+    }
+
+    .slot h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .slot p {
+      margin: 5px 0 0;
+      font-size: 16px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      padding: 30px 0 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <video autoplay muted loop playsinline class="bg-video">
+    <source src="{{ url_for('static', filename='bgvdofrontend.mp4') }}" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="overlay">
+    <header>
+      <h1>Smart Parking System</h1>
+    </header>
+
+    <div class="description">
+      With the rapid increase in urban population and the rising number of vehicles on the road, cities are facing severe challenges related to traffic congestion and the shortage of parking spaces.
+      Drivers often spend a significant amount of time searching for available parking, which not only wastes fuel but also contributes to overall traffic and pollution.
+      This Smart Parking System aims to solve that problem by using real-time detection to help users quickly identify empty slots, making parking more efficient, organized, and sustainable in increasingly crowded urban areas.
+    </div>
+
+    <div class="summary">
+      <strong>Available Slots:</strong> {{ available_slots }} / 6
+    </div>
+
+    <div class="btn-container">
+      <form action="/detect" method="post">
+        <button class="start-btn" type="submit">Start Detection</button>
+      </form>
+    </div>
+
+    <div class="container">
+      {% for slot in slots %}
+        <div class="slot {{ 'empty' if slot else 'occupied' }}">
+          <h3>Slot {{ loop.index }}</h3>
+          <p>{{ 'Available' if slot else 'Occupied' }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Smart Parking System
+  </footer>
+
+</body>
+</html>
